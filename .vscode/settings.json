@@ -1,1 +1,4 @@
-{}
+{
+    "discord.enabled": true,
+    "discord.lowerDetailsEditing": ".//{workspace}"
+}

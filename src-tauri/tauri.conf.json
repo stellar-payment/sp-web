@@ -4,7 +4,8 @@
     "beforeBuildCommand": "pnpm run build",
     "beforeDevCommand": "pnpm run dev",
     "devPath": "http://localhost:5173",
-    "distDir": "../build"
+    "distDir": "../dist",
+    "withGlobalTauri": true
   },
   "package": {
     "productName": "sp-web",
@@ -12,7 +13,21 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "fs": {
+        "all": true,
+        "scope": [
+          "**"
+        ]
+      },
+      "path": {
+        "all": true
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": [
+          "**"
+        ]
+      }
     },
     "bundle": {
       "active": true,
@@ -29,7 +44,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "cx.stellar.payment",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -38,7 +53,9 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "assets/*"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {
@@ -48,7 +65,7 @@
       }
     },
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost"
     },
     "updater": {
       "active": false
@@ -56,10 +73,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 1920,
         "resizable": true,
         "title": "Stellar Payment",
-        "width": 800
+        "width": 1080
       }
     ]
   }

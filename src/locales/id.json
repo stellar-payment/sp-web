@@ -1,0 +1,40 @@
+{
+	"api_error": {
+	  "500011": "internal server error!",
+	  "400012": "invalid request data!",
+	  "403013": "user doesn't have required privileges!",
+	  "401014": "invalid username or password!",
+	  "400015": "data already exists!",
+	  "422016": "invalid data!",
+	  "404017": "resource not found!",
+	  "400018" : "invalid data!",
+	  "403021": "session expired!",
+	  "400022": "account already registered!"
+	},
+	"validator_error": {
+	  "should_value": "value should be in {{value}}!",
+	  "should_choosen": "{{data}} should be selected!",
+	  "should_filled": "{{data}} should be filled !",
+	  "is_past": "{{data}} should be in the past!",
+	  "is_future": "{{data}} should be in the future!",
+	  "is_percentage": "invalid percentage value!"
+	},
+	"success": {
+	  "success": "{{data}} success!",
+	  "add": "{{data}} added!",
+	  "edit": "{{data}} updated!",
+	  "delete": "{{data}} deleted!",
+	  "nonactive": "{{data}} deactivated!",
+	  "reactivated": "{{data}} reactivated!"
+	},
+	"role_id": {
+		"1": "Admin",
+		"2": "Customer",
+		"3": "Merchant"
+	},
+	"account_type": {
+		"1": "Customer",
+		"2": "Merchant"
+	}
+  }
+  
