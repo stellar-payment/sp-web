@@ -6,6 +6,7 @@ import DashboardAdmin from "@/routes/Dashboard/DashboardAdmin.svelte";
 import NotFound from "@/routes/Error/NotFound.svelte";
 import ClientRegistration from "@/routes/FIrstBoot/ClientRegistration.svelte";
 import InitPage from "@/routes/FIrstBoot/InitPage.svelte";
+import BeneficiaryDataAdmin from "@/routes/Transactions/BeneficiaryDataAdmin.svelte";
 import TransactionDataAdmin from "@/routes/Transactions/TransactionDataAdmin.svelte";
 import Customers from "@/routes/Userdata/Customers.svelte";
 import Merchants from "@/routes/Userdata/Merchants.svelte";
@@ -23,6 +24,7 @@ const routes = {
   "/merchants": Merchants,
   "/accounts": AccountData,
   "/transactions-admin": TransactionDataAdmin,
+  "/beneficiaries-admin": BeneficiaryDataAdmin,
   // Catch-all
   // This is optional, but if present it must be the last
   "*": NotFound,

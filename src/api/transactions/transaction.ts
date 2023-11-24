@@ -13,34 +13,29 @@ import type { AxiosResponse } from 'axios';
 import type { z } from 'zod';
 
 const getAllTransaction = async (params: QueryDataWithPagination) => {
-	const encrypted_data: AxiosResponse<SecuredAPIResponse> = await authClient.get(
-		`/payment/api/v1/transactions`,
-		{ params: params }
-	);
+	try {
+		const encrypted_data: AxiosResponse<SecuredAPIResponse> = await authClient.get(
+			`/payment/api/v1/transactions`,
+			{ params: params }
+		);
 
-	// pub struct DecryptDataPayload {
-	// 	// pub partner_id: String,
-	// 	pub data: String,
-	// 	pub tag: String,
-	// 	pub keypair_hash: String,
-	//  }
+		const decrypted = await invoke('decrypt_payload', {
+			payload: {
+				data: encrypted_data.data.data,
+				keypair_hash: encrypted_data.data.secret_key,
+				tag: encrypted_data.data.tag
+			}
+		})
 
-	console.log('res', encrypted_data);
-	const decrypted = await invoke('decrypt_payload', {
-		payload: {
-			data: encrypted_data.data.data,
-			keypair_hash: encrypted_data.data.secret_key,
-			tag: encrypted_data.data.tag
-		}
-	}).catch((e) => console.log('bruh', e));
-	console.log('data', decrypted);
-
-	// const data: ApiDataResponseMeta<TransactionData[]> = JSON.parse(decrypted);
-
-	// return {
-	// data: data.transactions,
-	// meta: data.meta
-	// };
+		const resp: ApiResponse<ApiDataResponseMeta<TransactionData[]>> = JSON.parse(decrypted as string);
+		return {
+			data: resp.data.transactions,
+			meta: resp.data.meta
+		};
+	} catch (e) {
+		console.log('err', e);
+		return Promise.reject(Error(e as string));
+	}
 };
 
 const getTransactionByID = async (id: number) => {

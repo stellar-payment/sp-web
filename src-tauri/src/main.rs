@@ -18,6 +18,8 @@ use security_handler::{
    KeyStoreState,
 };
 use tauri::{utils::config::AppUrl, Manager, State, WindowUrl};
+use tauri_plugin_log::{LogTarget};
+
 
 #[tokio::main]
 async fn main() {
@@ -31,6 +33,10 @@ async fn main() {
 
    tauri::Builder::default()
       .plugin(tauri_plugin_localhost::Builder::new(port).build())
+      .plugin(tauri_plugin_log::Builder::default().targets([
+         LogTarget::LogDir,
+         LogTarget::Stdout,
+     ]).build())
       .manage(ConfigStore {
          db: Default::default(),
       })

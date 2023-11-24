@@ -52,10 +52,19 @@ type TransactionData = {
 	description: string,
 }
 
+type BeneficiaryData = {
+	id: number, 
+	merchant_id: string,
+	amount: number,
+	withdrawal_date: string,
+	status: number,
+}
+
 export type {
     UserData,
 	CustomerData,
 	MerchantData,
 	AccountData,
-	TransactionData
+	TransactionData,
+	BeneficiaryData
 }

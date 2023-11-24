@@ -6,7 +6,7 @@
   export let table: Readable<Table<T>>;
 </script>
 
-<div class="px-2 py-2 bg-brand-white rounded-md mt-10">
+<div class="px-2 py-2 rounded-md mt-10">
   <table class="w-full">
     <thead>
       {#each $table.getHeaderGroups() as headerGroup}

@@ -35,6 +35,22 @@
 	"account_type": {
 		"1": "Customer",
 		"2": "Merchant"
+	},
+	"trx_type": {
+		"1": "Peer",
+		"2": "Merchant",
+		"3": "Beneficiaries",
+		"9": "System"
+	},
+	"trx_status": {
+		"0": "Pending",
+		"1": "Success",
+		"2": "Cancelled",
+		"9": "Void"
+	},
+	"bnf_status": {
+		"1": "Pending",
+		"2": "Confirmed"
 	}
   }
   

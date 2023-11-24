@@ -6,6 +6,7 @@
 		getMerchantByID,
 		updateMerchant
 	} from '@/api/accounts/merchants';
+	import { deleteBeneficiary, getAllBeneficiary } from '@/api/transactions/beneficiaries';
 	import { deleteTransaction, getAllTransaction } from '@/api/transactions/transaction';
 	import ActionButtonWrapper from '@/components/Action/ActionButtonWrapper.svelte';
 	import Button from '@/components/Button/Button.svelte';
@@ -36,8 +37,8 @@
 		control: { nextPage, previousPage, setPage, changePerPage }
 	} = createPaginatedQuery<CustomerData[]>({
 		queryObj: queryObj,
-		queryFunction: getAllTransaction,
-		queryKey: ['transactions']
+		queryFunction: getAllBeneficiary,
+		queryKey: ['beneficiaries']
 	});
 
 	const {
@@ -48,9 +49,9 @@
 			modalAction: deleteModalAction
 		}
 	} = createBulkDeleteHandler({
-		mutationApi: deleteTransaction,
+		mutationApi: deleteBeneficiary,
 		refetch: $query ? $query.refetch : () => {},
-		actionName: 'Delete Transaction'
+		actionName: 'Delete Beneficiary'
 	});
 
 	const defaultColumns: ColumnDef<UserData>[] = [
@@ -61,55 +62,29 @@
 				row.index + 1 + (get(paginationStore).page - 1) * get(paginationStore).limit
 		},		
 		{
-			accessorKey: 'account_name',
-			header: 'Source',
-			cell: (info) => {
-				const data = info.getValue() as string;
-				return data == "" ? "System" : data  ;
-			}
+			accessorKey: 'merchant_name',
+			header: 'Merchant',
 		},
 		{
-			accessorKey: 'recipient_name',
-			header: 'Recipient'
-		},
-		{
-			accessorKey: 'trx_type',
-			header: 'Transaction Type',
-			cell: (info) => {
-				return translate(`trx_type.${info.getValue()}`);
-			}
-		},
-		{
-			accessorKey: 'trx_datetime',
-			header: 'Datetime',
-			cell: (info) => {
-				return dayjs(info.getValue() as string).format("YYYY-MM-DD HH:mm:ss")
-			}
-		},
-		{
-			accessorKey: 'trx_status',
-			header: 'Status',
-			cell: (info) => {
-				return translate(`trx_status.${info.getValue()}`);
-			}
-		},
-		{
-			accessorKey: 'trx_fee',
-			header: 'Transaction Fee',
-			cell: (info) => {
-				return formatNumber(info.getValue() as number)
-			}
-		},
-		{
-			accessorKey: 'nominal',
+			accessorKey: 'amount',
 			header: 'Nominal',
 			cell: (info) => {
 				return formatNumber(info.getValue() as number)
 			}
 		},
 		{
-			accessorKey: 'description',
-			header: 'Description'
+			accessorKey: 'withdrawal_date',
+			header: 'Datetime',
+			cell: (info) => {
+				return dayjs(info.getValue() as string).format("YYYY-MM-DD HH:mm:ss")
+			}
+		},
+		{
+			accessorKey: 'status',
+			header: 'Status',
+			cell: (info) => {
+				return translate(`bnf_status.${info.getValue()}`);
+			}
 		},
 		{
 			accessorKey: 'id',
@@ -135,7 +110,7 @@
 	const { roleOption } = createUserRoleOption();
 </script>
 
-<AdminPageLayout pageName="Transactions">
+<AdminPageLayout pageName="Beneficiaries">
 	{#if $query.data}
 		<Table table={table.table} />
 	{/if}

@@ -129,9 +129,18 @@ const SIDEBAR = [
 			},
 			{
 				key: 'Beneficiaries',
-				route: '/beneficiaries',
+				route: '/beneficiaries-admin',
 				icon: CreditCard,
 				roleAccess: [0, 1],
+				label: 'Beneficiaries',
+				isClickable: true,
+				subMenu: []
+			},
+			{
+				key: 'Beneficiaries',
+				route: '/beneficiaries-merchant',
+				icon: CreditCard,
+				roleAccess: [0, 3],
 				label: 'Beneficiaries',
 				isClickable: true,
 				subMenu: []

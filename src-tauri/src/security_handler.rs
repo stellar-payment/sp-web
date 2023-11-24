@@ -1,6 +1,7 @@
 use std::sync::{Arc, Mutex};
 
 use data_encoding::BASE64;
+use log::info;
 use p256::{elliptic_curve::generic_array::GenericArray, NistP256, PublicKey, SecretKey, U32};
 use rand::seq::SliceRandom;
 use rand_core::OsRng;
@@ -160,15 +161,23 @@ pub async fn decrypt_payload(
    let enc_key = &secret_key[0..32];
    let mac_key = &secret_key[32..64];
 
+   info!("{}", BASE64.encode(enc_key));
+   info!("{}", BASE64.encode(mac_key));
+
    let ct = match BASE64.decode(ct.as_bytes()) {
       Ok(v) => v,
       Err(e) => return Err(BackendError::DataIntegrityError(e.to_string())),
    };
 
+   info!("{}", BASE64.encode(&ct));
+
    let iv = match BASE64.decode(iv.as_bytes()) {
       Ok(v) => v,
       Err(e) => return Err(BackendError::DataIntegrityError(e.to_string())),
    };
+
+   info!("{}", BASE64.encode(&iv));
+
 
    let tag = match BASE64.decode(payload.tag.as_bytes()) {
       Ok(v) => v,
