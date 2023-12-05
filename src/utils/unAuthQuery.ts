@@ -1,7 +1,8 @@
+import { BASE_API } from "@/interfaces/api.interface";
 import axios from "axios";
 
 const unAuthClient = axios.create({
-    baseURL: import.meta.env.VITE_BASE_API,
+    baseURL: BASE_API,
     headers: {
         "Content-Type": "application/json",
     },

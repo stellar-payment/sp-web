@@ -34,7 +34,7 @@ type AccountData = {
 	owner_id: string, 
 	owner_name: string, 
 	account_type: number, 
-	balance: string, 
+	balance: number, 
 	account_no: string,
 }
 

@@ -5,12 +5,14 @@ import type {
 	QueryDataWithPagination
 } from '@/interfaces/api.interface';
 import type { TransactionData } from '@/interfaces/data.interface';
-import type { SecuredAPIResponse } from '@/interfaces/security.interface';
+import type { DecryptedData, EncryptedData, SecuredAPIResponse } from '@/interfaces/security.interface';
 import authClient from '@/utils/authQuery';
 import unAuthClient from '@/utils/unAuthQuery';
 import { invoke } from '@tauri-apps/api/tauri';
-import type { AxiosResponse } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
 import type { z } from 'zod';
+import { authenticateAccount } from '../payments/accounts';
+import secureAuthClient from '@/utils/secureAuthQuery';
 
 const getAllTransaction = async (params: QueryDataWithPagination) => {
 	try {
@@ -25,9 +27,11 @@ const getAllTransaction = async (params: QueryDataWithPagination) => {
 				keypair_hash: encrypted_data.data.secret_key,
 				tag: encrypted_data.data.tag
 			}
-		})
+		});
 
-		const resp: ApiResponse<ApiDataResponseMeta<TransactionData[]>> = JSON.parse(decrypted as string);
+		const resp: ApiResponse<ApiDataResponseMeta<TransactionData[]>> = JSON.parse(
+			decrypted as string
+		);
 		return {
 			data: resp.data.transactions,
 			meta: resp.data.meta
@@ -45,8 +49,40 @@ const getTransactionByID = async (id: number) => {
 	return data.data;
 };
 
-const createNewTransaction = async (trx: z.infer<typeof transactionSchema>) => {
-	await unAuthClient.post(`/payment/api/v1/transactions`, trx);
+const createNewTransactionP2P = async (trx: z.infer<typeof transactionSchema>) => {
+	try {
+		// authenticateAccount(trx.account_no, trx.pin).then((v) => console.log("aa", v));
+
+		const encrypted_payload: EncryptedData = await invoke('encrypt_payload', {
+			payload: JSON.stringify(trx)
+		});
+
+		const encrypted_data: AxiosResponse<SecuredAPIResponse> = await secureAuthClient.post(
+			`/payment/api/v1/transactions/p2p`,
+			`${encrypted_payload.data}.${encrypted_payload.tag}`,
+			{
+				headers: {
+					'X-Sec-Keypair': encrypted_payload.keypair_hash,
+					'Content-Type': "text/plain"
+				}
+			}
+		);
+
+		return
+	} catch (e) {
+		const data = (e as AxiosError).response?.data as SecuredAPIResponse
+		const decrypted: string = await invoke('decrypt_payload', {
+			payload: {
+				data: data.data,
+				keypair_hash: data.secret_key,
+				tag: data.tag
+			}
+		});
+
+		const errmeta = JSON.parse(decrypted)
+
+		return Promise.reject(Error(errmeta.error.msg as string));
+	}
 };
 
 // const updateTransaction = async (editTransactionData: z.infer<typeof updateTransactionSchema>, id: string) => {
@@ -60,7 +96,8 @@ const deleteTransaction = async (id: number) => {
 export {
 	getAllTransaction,
 	getTransactionByID,
-	createNewTransaction,
+	createNewTransactionP2P,
+	// createNewTransactionP2B,
 	// updateTransaction,
 	deleteTransaction
 };

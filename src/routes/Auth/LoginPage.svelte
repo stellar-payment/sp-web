@@ -10,6 +10,9 @@
 	import { createMutationForm } from '@/stores/createMutationForm';
 	import { push } from 'svelte-spa-router';
 	import Input from '@/components/Input/Input.svelte';
+	import { getMeAccount } from '@/api/payments/accounts';
+	import { updateUserAccount } from '@/stores/account';
+	import type { UserAuthData } from '@/interfaces/auth.interface';
 
 	const {
 		form: { form },
@@ -18,7 +21,7 @@
 		mutationApi: login,
 		formSchema: loginSchema,
 		actionName: 'Login',
-		successFn: (data) => {
+		successFn: (data: UserAuthData) => {
 			updateAuthUser(data);
 		},
 		callbackRoute: '/dashboard'
@@ -26,7 +29,16 @@
 
 	UserAuthDataStore.subscribe((value) => {
 		if (value.access_token) {
-			push('/dashboard');
+			if (value.role_id > 1) {
+				getMeAccount().then((meta) => {
+					console.log(meta)
+					return updateUserAccount(meta)
+				}).catch((e) => {
+					push("/account-first-setup")
+				});
+			} else {
+				push("/dashboard")
+			}
 		}
 	});
 </script>

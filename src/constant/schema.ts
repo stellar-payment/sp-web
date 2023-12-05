@@ -68,14 +68,10 @@ const updateMerchantSchema = z.object({
 });
 
 const accountSchema = z.object({
-	owner_id: z.string().nonempty("owner_id can't be empty"),
 	pin: z
 		.string()
 		.nonempty("pin can't be empty")
 		.min(6, 'pin must have at least 6 digits')
-		.transform((val) => {
-			return parseInt(val, 10);
-		})
 });
 
 const updateAccountSchema = z.object({
@@ -91,10 +87,13 @@ const updateAccountSchema = z.object({
 });
 
 const transactionSchema = z.object({
-	account_id: z.string(),
-	recipient_id: z.string(),
-	nominal: z.number(),
-	description: z.string(),
+	account_id: z.string().optional(),
+	recipient_id: z.string().optional(),
+	nominal: z.string()
+		.transform((val) => {
+			return parseInt(val, 10);
+	}),
+	description: z.string().default("💀"),
 })
 
 

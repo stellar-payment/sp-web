@@ -15,6 +15,14 @@ interface UserStoreData {
     access_token: string;
 }
 
+interface UserAccountData {
+    id: string, 
+    owner_id: string, 
+    account_type: number, 
+    balance: number, 
+    account_no: string
+}
+
 type UserLoginData = z.infer<typeof loginSchema>
 
 type UserRegisterData = {
@@ -40,4 +48,5 @@ export type {
     UserLoginData,
     UserRegisterData,
     ClientRegisterData
+    UserAccountData,
 }

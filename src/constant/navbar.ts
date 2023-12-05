@@ -101,28 +101,10 @@ const SIDEBAR = [
 				subMenu: []
 			},
 			{
-				key: 'Transactions',
-				route: '/transactions-merchant',
-				icon: CreditCard,
-				roleAccess: [0, 2],
-				label: 'Transactions',
-				isClickable: true,
-				subMenu: []
-			},
-			{
-				key: 'Transactions',
-				route: '/transactions-customer',
-				icon: CreditCard,
-				roleAccess: [0, 3],
-				label: 'Transactions',
-				isClickable: true,
-				subMenu: []
-			},
-			{
 				key: 'Settlements',
 				route: '/settlements',
 				icon: CreditCard,
-				roleAccess: [0, 3],
+				roleAccess: [0],
 				label: 'Settlements',
 				isClickable: true,
 				subMenu: []
@@ -136,17 +118,44 @@ const SIDEBAR = [
 				isClickable: true,
 				subMenu: []
 			},
-			{
-				key: 'Beneficiaries',
-				route: '/beneficiaries-merchant',
-				icon: CreditCard,
-				roleAccess: [0, 3],
-				label: 'Beneficiaries',
-				isClickable: true,
-				subMenu: []
-			}
-		]
-	}
+		]	
+	},
+	{
+		key: 'Settlements',
+		route: '/settlements',
+		icon: CreditCard,
+		roleAccess: [3],
+		label: 'Settlements',
+		isClickable: true,
+		subMenu: []
+	},
+	{
+		key: 'Beneficiaries',
+		route: '/beneficiaries-merchant',
+		icon: CreditCard,
+		roleAccess: [3],
+		label: 'Beneficiaries',
+		isClickable: true,
+		subMenu: []
+	},
+	{
+		key: 'Transactions',
+		route: '/transactions-merchant',
+		icon: CreditCard,
+		roleAccess: [3],
+		label: 'Transactions',
+		isClickable: true,
+		subMenu: []
+	},
+	{
+		key: 'Transactions',
+		route: '/transactions-customer',
+		icon: CreditCard,
+		roleAccess: [2],
+		label: 'Transactions',
+		isClickable: true,
+		subMenu: []
+	},
 ];
 
 export { SIDEBAR };

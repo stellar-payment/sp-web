@@ -93,15 +93,12 @@ pub async fn encrypt_payload(
    };
 
    let shared_secret = ecdh_generate_secret(secret_key, public_key);
-   let secret_key = generate_shared_key(&shared_secret)?;
+   let (enc_key, mac_key) = generate_shared_key(&shared_secret)?;
 
-   let enc_key = &secret_key[0..32];
-   let mac_key = &secret_key[32..64];
-
-   let enc_key: GenericArray<u8, U32> = GenericArray::clone_from_slice(enc_key);
+   let enc_key: GenericArray<u8, U32> = GenericArray::clone_from_slice(&enc_key);
 
    let (ct, iv) = aes256_iv_encrypt(enc_key, payload.as_bytes());
-   let mac = match hmac512_hash(mac_key, &ct) {
+   let mac = match hmac512_hash(&mac_key, &ct) {
       Ok(v) => v,
       Err(e) => return Err(BackendError::GenericError(e.to_string())),
    };
@@ -156,27 +153,17 @@ pub async fn decrypt_payload(
    let (ct, iv) = payload.data.split_once('.').unwrap();
 
    let shared_secret = ecdh_generate_secret(secret_key, public_key);
-   let secret_key = generate_shared_key(&shared_secret)?;
-
-   let enc_key = &secret_key[0..32];
-   let mac_key = &secret_key[32..64];
-
-   info!("{}", BASE64.encode(enc_key));
-   info!("{}", BASE64.encode(mac_key));
+   let (enc_key, mac_key) = generate_shared_key(&shared_secret)?;
 
    let ct = match BASE64.decode(ct.as_bytes()) {
       Ok(v) => v,
       Err(e) => return Err(BackendError::DataIntegrityError(e.to_string())),
    };
 
-   info!("{}", BASE64.encode(&ct));
-
    let iv = match BASE64.decode(iv.as_bytes()) {
       Ok(v) => v,
       Err(e) => return Err(BackendError::DataIntegrityError(e.to_string())),
    };
-
-   info!("{}", BASE64.encode(&iv));
 
 
    let tag = match BASE64.decode(payload.tag.as_bytes()) {
@@ -184,8 +171,8 @@ pub async fn decrypt_payload(
       Err(e) => return Err(BackendError::DataIntegrityError(e.to_string())),
    };
 
-   let enc_key: GenericArray<u8, U32> = GenericArray::clone_from_slice(enc_key);
-   match hmac512_verify(mac_key, &ct, &tag) {
+   let enc_key: GenericArray<u8, U32> = GenericArray::clone_from_slice(&enc_key);
+   match hmac512_verify(&mac_key, &ct, &tag) {
       Ok(_) => (),
       Err(e) => return Err(BackendError::DataIntegrityError(e.to_string())),
    }

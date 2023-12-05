@@ -11,6 +11,7 @@
 	import ActionButtonWrapper from '@/components/Action/ActionButtonWrapper.svelte';
 	import Button from '@/components/Button/Button.svelte';
 	import CustomInput from '@/components/Input/CustomInput.svelte';
+	import PaginationLimitDropdown from '@/components/Input/PaginationLimitDropdown.svelte';
 	import AdminPageLayout from '@/components/Layout/AdminPageLayout.svelte';
 	import LoadingPulse from '@/components/Loading/LoadingPulse.svelte';
 	import ConfirmationModal from '@/components/Modal/ConfirmationModal.svelte';
@@ -111,6 +112,9 @@
 </script>
 
 <AdminPageLayout pageName="Beneficiaries">
+	<div class="w-full flex justify-between mt-5">
+		<PaginationLimitDropdown {changePerPage} />
+	</div>  
 	{#if $query.data}
 		<Table table={table.table} />
 	{/if}

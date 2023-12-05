@@ -119,6 +119,9 @@
 </script>
 
 <AdminPageLayout pageName="Customers">
+	<div class="w-full flex justify-between mt-5">
+		<PaginationLimitDropdown {changePerPage} />
+	</div>  
 	{#if $query.data}
 		<Table table={table.table} />
 	{/if}

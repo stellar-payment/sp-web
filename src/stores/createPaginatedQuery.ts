@@ -52,7 +52,11 @@ export function createPaginatedQuery<T>({ queryObj, queryKey, queryFunction, ena
                 toast.error(translate(`api_error.${response.error.code}`));
             } else if (axios.isAxiosError(err)) {
                 toast.error(`Fetch Failed!`);
-            }
+            } else {
+				toast.error(err.message, {
+					position: 'bottom-center'
+				});
+			}
         },
         enabled: enabled ? enabled : true
     }

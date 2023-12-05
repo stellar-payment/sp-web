@@ -1,4 +1,3 @@
-use crate::error::BackendError;
 use serde::{Deserialize, Serialize};
 
 macro_rules! env_or {
@@ -11,7 +10,10 @@ macro_rules! env_or {
    };
 }
 
-pub const BASE_API: &str = env_or!("BASE_API", "");
+// pub const BASE_API: &str = "https://stellar-payment.fuwuna.tech";
+pub const BASE_API: &str = "http://192.168.1.100:4010";
+// pub const BASE_API: &str = "http://127.0.0.1:7780";
+// pub const BASE_API: &str = "";
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 pub struct ApiResponse<T> {

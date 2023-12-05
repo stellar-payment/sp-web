@@ -9,6 +9,7 @@
 
   const handleClick = () => {
     resetAuthUser();
+    isOpen = false;
     push("/");
   };
 </script>

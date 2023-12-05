@@ -26,7 +26,7 @@ async fn main() {
    let port = portpicker::pick_unused_port().expect("failed to find unused port");
 
    let mut context = tauri::generate_context!();
-   let url = format!("http://localhost:{}", port).parse().unwrap();
+   let url = format!("https://localhost:{}", port).parse().unwrap();
    let window_url = WindowUrl::External(url);
 
    context.config_mut().build.dist_dir = AppUrl::Url(window_url);
