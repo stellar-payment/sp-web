@@ -1,6 +1,8 @@
 import JSONbigint from "json-bigint";
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { getAuthUser } from "@/stores/auth";
+import { getAuthUser, resetAuthUser } from "@/stores/auth";
+import type { ApiResponse } from "@/interfaces/api.interface";
+import { push } from "svelte-spa-router";
 
 async function handleAuth(config: InternalAxiosRequestConfig<any>) {
 	const { access_token } = getAuthUser();
@@ -19,8 +21,19 @@ async function jsonBigParse(response: AxiosResponse) {
     return response;
   }
   
+async function handleSession(res: AxiosResponse<ApiResponse<any>>) {
+    console.log(res.data)
+    
+    if (res.data.error?.code == 403019) {
+        resetAuthUser()
+        push("/")
+    }
+
+    return res
+}
 
 export {
     jsonBigParse,
-    handleAuth
+    handleAuth,
+    handleSession
 }

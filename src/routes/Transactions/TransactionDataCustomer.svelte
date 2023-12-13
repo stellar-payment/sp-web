@@ -8,6 +8,7 @@
 	} from '@/api/accounts/merchants';
 	import { getAccountByNo, getMeAccount } from '@/api/payments/accounts';
 	import {
+	createNewTransactionP2B,
 		createNewTransactionP2P,
 		deleteTransaction,
 		getAllTransaction
@@ -15,6 +16,8 @@
 	import ActionButtonWrapper from '@/components/Action/ActionButtonWrapper.svelte';
 	import AddButton from '@/components/Button/AddButton.svelte';
 	import Button from '@/components/Button/Button.svelte';
+	import Add from '@/components/Icons/Add.svelte';
+	import CreditCard from '@/components/Icons/CreditCard.svelte';
 	import ComboboxInput from '@/components/Input/ComboboxInput.svelte';
 	import CustomInput from '@/components/Input/CustomInput.svelte';
 	import DropdownInput from '@/components/Input/DropdownInput.svelte';
@@ -61,11 +64,29 @@
 	} = createAccountOptions({});
 
 	const {
+		form: { form: peerForm, data: peerData, setFields: setPeerField },
+		modal: { isOpen: isPeerModalOpen, closeModal: closePeerModal, openModal: openPeerModal },
+		mutation: peerMutation
+	} = createAddModal<z.infer<typeof transactionSchema>>({
+		mutationApi: createNewTransactionP2P,
+		refetch: $query ? $query.refetch : () => {},
+		formSchema: transactionSchema,
+		actionName: 'new peer transaction',
+		submitTransform: (value: z.infer<typeof transactionSchema>) => {
+			return {
+					...value,
+					account_no: getUserAccount().account_no,
+					account_id: getUserAccount().id,
+			};
+		}
+	});
+
+	const {
 		form: { form: addForm, data: addData, setFields },
 		modal: { isOpen: isAddModalOpen, closeModal: closeAddModal, openModal: openAddModal },
 		mutation: addMutation
 	} = createAddModal<z.infer<typeof transactionSchema>>({
-		mutationApi: createNewTransactionP2P,
+		mutationApi: createNewTransactionP2B,
 		refetch: $query ? $query.refetch : () => {},
 		formSchema: transactionSchema,
 		actionName: 'new transaction',
@@ -170,6 +191,27 @@
 		debugTable: true
 	});
 
+	peerData.subscribe(async (val) => {
+		if (val && val.source_id.length == 0) {
+			const accountMeta = await getMeAccount();
+
+			if (val.source_id == '') {
+				setFields('source_id', accountMeta.account_no);
+			}
+
+			if (val.source_balance == '') {
+				setFields('source_balance', accountMeta.balance ?? 0);
+			}
+		}
+
+		if (val && val.recipient_no.length != 0 && val.recipient_no != val.prev_recipient_no) {
+			setFields('prev_recipient_no', val.recipient_no)
+
+			const recipientMeta = await getAccountByNo(val.recipient_no)
+			setFields('recipient_id', recipientMeta.id)
+		}
+	});
+
 	addData.subscribe(async (val) => {
 		if (val && val.source_id.length == 0) {
 			const accountMeta = await getMeAccount();
@@ -193,9 +235,13 @@
 </script>
 
 <AdminPageLayout pageName="Transactions">
-	<div class="w-full flex justify-between mt-5">
+	<div class="w-full flex mt-5 justify-between">
 		<PaginationLimitDropdown {changePerPage} />
-		<AddButton onClick={openAddModal} />
+		<div class="w-1/4 flex justify-between">
+			<Button onClick={openPeerModal} icon={CreditCard}>Pay Friend</Button>
+			<Button onClick={openAddModal} icon={CreditCard}>Pay Merchant</Button>
+		</div>
+		<!-- <AddButton onClick={openAddModal} /> -->
 	</div>
 	{#if $query.data}
 		<Table table={table.table} />
@@ -218,13 +264,28 @@
 <!-- Loading -->
 <LoadingPulse isLoading={$query.isLoading || $accountQuery.isLoading} />
 
-<!-- Add Modal -->
+<!-- Peer Trx Modal -->
+<!-- <FormModal open={$isPeerModalOpen} onCancel={closePeerModal} title="New Transaction" form={peerForm}>
+	<CustomInput name="source_id" label="Source Account" disabled />
+	<CustomInput name="source_balance" label="Source Balance" disabled />
+	<CustomInput name="recipient_no" label="Destination Account" />
+	<CustomInput name="nominal" label="Nominal" />
+	<PasswordInput name="pin" label="PIN" />
+	<CustomInput name="description" label="Description" />
+
+	<div class="flex justify-end w-full">
+		<Button>Save</Button>
+	</div>
+</FormModal> -->
+
+<!-- Merchatn Trx Modal -->
 <FormModal open={$isAddModalOpen} onCancel={closeAddModal} title="New Transaction" form={addForm}>
 	<CustomInput name="source_id" label="Source Account" disabled />
 	<CustomInput name="source_balance" label="Source Balance" disabled />
 	<CustomInput name="recipient_no" label="Destination Account" />
 	<CustomInput name="nominal" label="Nominal" />
-	<!-- <PasswordInput name="pin" label="PIN" /> -->
+	<PasswordInput name="pin" label="PIN" />
+	<CustomInput name="description" label="Description" />
 
 	<div class="flex justify-end w-full">
 		<Button>Save</Button>

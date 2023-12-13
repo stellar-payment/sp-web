@@ -76,6 +76,7 @@ const accountSchema = z.object({
 
 const updateAccountSchema = z.object({
 	owner_id: z.string(),
+	account_type: z.number(),
 	account_no: z.string(),
 	pin: z
 		.string()
@@ -93,7 +94,11 @@ const transactionSchema = z.object({
 		.transform((val) => {
 			return parseInt(val, 10);
 	}),
-	description: z.string().default("💀"),
+	pin: z
+		.string()
+		.nonempty("pin can't be empty")
+		.min(6, 'pin must have at least 6 digits'),
+	description: z.string().default(""),
 })
 
 

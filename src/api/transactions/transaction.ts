@@ -85,6 +85,42 @@ const createNewTransactionP2P = async (trx: z.infer<typeof transactionSchema>) =
 	}
 };
 
+const createNewTransactionP2B = async (trx: z.infer<typeof transactionSchema>) => {
+	try {
+		// authenticateAccount(trx.account_no, trx.pin).then((v) => console.log("aa", v));
+
+		const encrypted_payload: EncryptedData = await invoke('encrypt_payload', {
+			payload: JSON.stringify(trx)
+		});
+
+		const encrypted_data: AxiosResponse<SecuredAPIResponse> = await secureAuthClient.post(
+			`/payment/api/v1/transactions/p2b`,
+			`${encrypted_payload.data}.${encrypted_payload.tag}`,
+			{
+				headers: {
+					'X-Sec-Keypair': encrypted_payload.keypair_hash,
+					'Content-Type': "text/plain"
+				}
+			}
+		);
+
+		return
+	} catch (e) {
+		const data = (e as AxiosError).response?.data as SecuredAPIResponse
+		const decrypted: string = await invoke('decrypt_payload', {
+			payload: {
+				data: data.data,
+				keypair_hash: data.secret_key,
+				tag: data.tag
+			}
+		});
+
+		const errmeta = JSON.parse(decrypted)
+
+		return Promise.reject(Error(errmeta.error.msg as string));
+	}
+};
+
 // const updateTransaction = async (editTransactionData: z.infer<typeof updateTransactionSchema>, id: string) => {
 // 	await authClient.put(`/payment/api/v1/accounts/${id}`, editTransactionData);
 // };
@@ -97,7 +133,7 @@ export {
 	getAllTransaction,
 	getTransactionByID,
 	createNewTransactionP2P,
-	// createNewTransactionP2B,
+	createNewTransactionP2B,
 	// updateTransaction,
 	deleteTransaction
 };

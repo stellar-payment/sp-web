@@ -74,7 +74,8 @@
 		submitTransform: (value) => {
 			return {
 				...value,
-				"pin": value.pin.toString,
+				"account_type": value.account_type,
+				"pin": value.pin.toString(),
 				"owner_id": value.owner_id,
 			};
 		}
