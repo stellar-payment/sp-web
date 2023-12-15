@@ -7,11 +7,9 @@ import type {
 import type { TransactionData } from '@/interfaces/data.interface';
 import type { DecryptedData, EncryptedData, SecuredAPIResponse } from '@/interfaces/security.interface';
 import authClient from '@/utils/authQuery';
-import unAuthClient from '@/utils/unAuthQuery';
 import { invoke } from '@tauri-apps/api/tauri';
 import type { AxiosError, AxiosResponse } from 'axios';
 import type { z } from 'zod';
-import { authenticateAccount } from '../payments/accounts';
 import secureAuthClient from '@/utils/secureAuthQuery';
 
 const getAllTransaction = async (params: QueryDataWithPagination) => {

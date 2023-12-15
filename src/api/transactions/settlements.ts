@@ -4,7 +4,7 @@ import type {
 	ApiResponse,
 	QueryDataWithPagination
 } from '@/interfaces/api.interface';
-import type { BeneficiaryData } from '@/interfaces/data.interface';
+import type { BeneficiaryData, SettlementData } from '@/interfaces/data.interface';
 import type { SecuredAPIResponse } from '@/interfaces/security.interface';
 import authClient from '@/utils/authQuery';
 import unAuthClient from '@/utils/unAuthQuery';
@@ -12,11 +12,11 @@ import { invoke } from '@tauri-apps/api/tauri';
 import type { AxiosResponse } from 'axios';
 import type { z } from 'zod';
 
-const getAllBeneficiary = async (params: QueryDataWithPagination) => {
-	const { data }: AxiosResponse<ApiResponse<ApiDataResponseMeta<BeneficiaryData[]>>> =
-		await authClient.get(`/payment/api/v1/beneficiaries`, { params: params });	
+const getAllSettlement = async (params: QueryDataWithPagination) => {
+	const { data }: AxiosResponse<ApiResponse<ApiDataResponseMeta<SettlementData[]>>> =
+		await authClient.get(`/payment/api/v1/settlements`, { params: params });
 	return {
-		data: data.data.beneficiaries,
+		data: data.data.settlements,
 		meta: data.data.meta
 	};
 
@@ -45,30 +45,13 @@ const getAllBeneficiary = async (params: QueryDataWithPagination) => {
 	// }
 };
 
-const getBeneficiaryByID = async (id: number) => {
+const getSettlementByID = async (id: number) => {
 	const { data }: AxiosResponse<ApiResponse<BeneficiaryData>> = await authClient.get(
-		`/payment/api/v1/beneficiaries/${id}`
+		`/payment/api/v1/settlements/${id}`
 	);
 	return data.data;
 };
-
-const getBeneficiaryPreview = async () => {
-	const {data}: AxiosResponse<ApiResponse<number>> =  await authClient.get(
-		`/payment/api/v1/beneficiaries/preview`
-	);
-	return data.data;
-}
-
-const createNewBeneficiary = async (trx: z.infer<typeof transactionSchema>) => {
-	await authClient.post(`/payment/api/v1/beneficiaries`, trx);
-};
-
-
-
 export {
-	getAllBeneficiary,
-	getBeneficiaryByID,
-	getBeneficiaryPreview,
-	createNewBeneficiary,
-	// updateBeneficiary,
+	getAllSettlement,
+	getSettlementByID
 };

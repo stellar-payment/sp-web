@@ -1,19 +1,18 @@
 <script lang="ts">
-	import { getAllBeneficiary } from '@/api/transactions/beneficiaries';
+	import { getAllSettlement } from '@/api/transactions/settlements';
 	import PaginationLimitDropdown from '@/components/Input/PaginationLimitDropdown.svelte';
 	import AdminPageLayout from '@/components/Layout/AdminPageLayout.svelte';
 	import LoadingPulse from '@/components/Loading/LoadingPulse.svelte';
 	import Pagination from '@/components/Pagination/Pagination.svelte';
 	import Table from '@/components/Table/Table.svelte';
-	import type { BeneficiaryData, CustomerData, UserData } from '@/interfaces/data.interface';
+	import type { SettlementData } from '@/interfaces/data.interface';
 	import { createPaginatedQuery } from '@/stores/createPaginatedQuery';
 	import { createUserRoleOption } from '@/stores/options/createUserRoleOption';
 	import { useSvelteTable } from '@/stores/useSvelteTable';
-	import { formatNumber, translate } from '@/utils/utils';
+	import { formatNumber } from '@/utils/utils';
 	import { type ColumnDef } from '@tanstack/svelte-table';
 	import dayjs from 'dayjs';
 	import { get, writable } from 'svelte/store';
-	import type { z } from 'zod';
 
 	let queryObj = writable({});
 
@@ -21,43 +20,42 @@
 		paginationStore,
 		query,
 		control: { nextPage, previousPage, setPage, changePerPage }
-	} = createPaginatedQuery<BeneficiaryData[]>({
+	} = createPaginatedQuery<SettlementData[]>({
 		queryObj: queryObj,
-		queryFunction: getAllBeneficiary,
-		queryKey: ['beneficiaries']
+		queryFunction: getAllSettlement,
+		queryKey: ['settlements']
 	});
 
-
-	const defaultColumns: ColumnDef<BeneficiaryData>[] = [
+	const defaultColumns: ColumnDef<SettlementData>[] = [
 		{
 			header: 'No',
 			size: 50,
 			cell: ({ row }) =>
 				row.index + 1 + (get(paginationStore).page - 1) * get(paginationStore).limit
-		},		
+		},
 		{
 			accessorKey: 'merchant_name',
-			header: 'Merchant',
+			header: 'Merchant'
 		},
 		{
 			accessorKey: 'amount',
 			header: 'Nominal',
 			cell: (info) => {
-				return formatNumber(info.getValue() as number)
+				return formatNumber(info.getValue() as number);
 			}
 		},
 		{
-			accessorKey: 'withdrawal_date',
+			accessorKey: 'settlement_date',
 			header: 'Datetime',
 			cell: (info) => {
-				return dayjs(info.getValue() as string).format("YYYY-MM-DD HH:mm:ss")
+				return dayjs(info.getValue() as string).format('YYYY-MM-DD HH:mm:ss');
 			}
 		},
 		{
 			accessorKey: 'status',
 			header: 'Status',
 			cell: (info) => {
-				return translate(`bnf_status.${info.getValue()}`);
+				return info.getValue() == 1 ? 'Settled' : '';
 			}
 		}
 	];
@@ -71,10 +69,10 @@
 	const { roleOption } = createUserRoleOption();
 </script>
 
-<AdminPageLayout pageName="Beneficiaries">
+<AdminPageLayout pageName="Settlements">
 	<div class="w-full flex justify-between mt-5">
 		<PaginationLimitDropdown {changePerPage} />
-	</div>  
+	</div>
 	{#if $query.data}
 		<Table table={table.table} />
 	{/if}
@@ -82,6 +80,16 @@
 		<Pagination {paginationStore} {nextPage} {previousPage} {setPage} />
 	</div>
 </AdminPageLayout>
+
+<!-- <ConfirmationModal
+	action="delete this transaction"
+	open={$isDeleteModalOpen}
+	onContinue={() => {
+		submitDelete();
+		closeDeleteModal();
+	}}
+	onCancel={() => closeDeleteModal()}
+/> -->
 
 <!-- Loading -->
 <LoadingPulse isLoading={$query.isLoading} />

@@ -16,6 +16,7 @@ interface Meta {
 	meta: {
 		limit: number;
 		page: number;
+		total_page: number;
 	};
 }
 
@@ -34,6 +35,7 @@ export interface ParsedDataResponseMeta<T> {
 export interface PaginationData {
 	limit: number;
 	page: number;
+	total_page: number;
 }
 
 export type QueryDataWithPagination = PaginationData & {
@@ -49,6 +51,7 @@ export type QueryDataWithPaginationObject = {
 	meta: {
 		page: number;
 		limit: number;
+		total_page: number;
 	};
 };
 

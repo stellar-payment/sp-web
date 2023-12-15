@@ -1,12 +1,10 @@
 <script lang="ts">
-	import { login } from '@/api/auth/auth';
 	import Button from '@/components/Button/Button.svelte';
 	import AuthCard from '@/components/Card/AuthCard.svelte';
 	import PasswordInput from '@/components/Input/PasswordInput.svelte';
 	import AuthLayout from '@/components/Layout/AuthLayout.svelte';
 	import LoadingPulse from '@/components/Loading/LoadingPulse.svelte';
-	import { customerSchema, loginSchema } from '@/constant/schema';
-	import { updateAuthUser, UserAuthDataStore } from '@/stores/auth';
+	import { customerSchema } from '@/constant/schema';
 	import { createMutationForm } from '@/stores/createMutationForm';
 	import { push } from 'svelte-spa-router';
 	import DatePicker from '@/components/Input/DatePicker.svelte';

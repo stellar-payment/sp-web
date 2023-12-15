@@ -102,9 +102,9 @@ const SIDEBAR = [
 			},
 			{
 				key: 'Settlements',
-				route: '/settlements',
+				route: '/settlements-admin',
 				icon: CreditCard,
-				roleAccess: [0],
+				roleAccess: [0, 1],
 				label: 'Settlements',
 				isClickable: true,
 				subMenu: []
@@ -122,7 +122,7 @@ const SIDEBAR = [
 	},
 	{
 		key: 'Settlements',
-		route: '/settlements',
+		route: '/settlements-merchant',
 		icon: CreditCard,
 		roleAccess: [3],
 		label: 'Settlements',

@@ -101,7 +101,9 @@ const transactionSchema = z.object({
 	description: z.string().default(""),
 })
 
-
+const beneficiarySchema = z.object({
+	pending_settlement: z.coerce.number().gte(10000, "minimum credit to be withdrawn are 10000"),
+})
 
 export {
 	loginSchema,
@@ -115,4 +117,5 @@ export {
 	accountSchema,
 	updateAccountSchema,
 	transactionSchema,
+	beneficiarySchema,
 };

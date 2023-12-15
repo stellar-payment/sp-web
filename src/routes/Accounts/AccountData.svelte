@@ -1,11 +1,10 @@
 <script lang="ts">
 	import {
-		deleteMerchant,
-		getAllMerchant,
-		getMerchantByID,
-		updateMerchant
-	} from '@/api/accounts/merchants';
-	import { deleteAccount, getAccountByID, getAllAccount, updateAccount } from '@/api/payments/accounts';
+		deleteAccount,
+		getAccountByID,
+		getAllAccount,
+		updateAccount
+	} from '@/api/payments/accounts';
 	import ActionButtonWrapper from '@/components/Action/ActionButtonWrapper.svelte';
 	import Button from '@/components/Button/Button.svelte';
 	import CustomInput from '@/components/Input/CustomInput.svelte';
@@ -16,15 +15,8 @@
 	import FormModal from '@/components/Modal/FormModal.svelte';
 	import Pagination from '@/components/Pagination/Pagination.svelte';
 	import Table from '@/components/Table/Table.svelte';
-	import {
-	updateAccountSchema,
-		updateCustomerSchema,
-		updateMerchantSchema,
-		updateUserSchema,
-		userSchema
-	} from '@/constant/schema';
-	import type { CustomerData, UserData } from '@/interfaces/data.interface';
-	import { createAddModal } from '@/stores/createAddModal';
+	import { updateAccountSchema } from '@/constant/schema';
+	import type { AccountData, UserData } from '@/interfaces/data.interface';
 	import { createBulkDeleteHandler } from '@/stores/createBulkDeleteHandler';
 	import { createEditModal } from '@/stores/createEditModal';
 	import { createPaginatedQuery } from '@/stores/createPaginatedQuery';
@@ -41,7 +33,7 @@
 		paginationStore,
 		query,
 		control: { nextPage, previousPage, setPage, changePerPage }
-	} = createPaginatedQuery<CustomerData[]>({
+	} = createPaginatedQuery<AccountData[]>({
 		queryObj: queryObj,
 		queryFunction: getAllAccount,
 		queryKey: ['accounts']
@@ -74,14 +66,14 @@
 		submitTransform: (value) => {
 			return {
 				...value,
-				"account_type": value.account_type,
-				"pin": value.pin.toString(),
-				"owner_id": value.owner_id,
+				account_type: value.account_type,
+				pin: value.pin.toString(),
+				owner_id: value.owner_id
 			};
 		}
 	});
 
-	const defaultColumns: ColumnDef<UserData>[] = [
+	const defaultColumns: ColumnDef<AccountData>[] = [
 		{
 			header: 'No',
 			size: 50,
@@ -155,7 +147,7 @@
 
 <!-- Edit Modal -->
 <FormModal open={$isEditFormOpen} onCancel={closeEditModal} title="Edit Account" form={editForm}>
-	<CustomInput name="account_no" label="Account No" disabled/>
+	<CustomInput name="account_no" label="Account No" disabled />
 	<PasswordInput name="pin" label="New PIN" />
 	<div class="flex justify-end w-full">
 		<Button>Save</Button>

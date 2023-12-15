@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { login } from '@/api/auth/auth';
 	import Button from '@/components/Button/Button.svelte';
 	import AuthCard from '@/components/Card/AuthCard.svelte';
 	import PasswordInput from '@/components/Input/PasswordInput.svelte';
@@ -8,8 +7,6 @@
 	import { merchantSchema } from '@/constant/schema';
 	import { createMutationForm } from '@/stores/createMutationForm';
 	import { push } from 'svelte-spa-router';
-	import Input from '@/components/Input/Input.svelte';
-	import DatePicker from '@/components/Input/DatePicker.svelte';
 	import { createNewMerchant } from '@/api/accounts/merchants';
 	import CustomInput from '@/components/Input/CustomInput.svelte';
 

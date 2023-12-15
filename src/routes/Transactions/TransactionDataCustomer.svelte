@@ -1,26 +1,15 @@
 <script lang="ts">
-	import { getAllCustomer, getCustomerByID, updateCustomer } from '@/api/accounts/customers';
-	import {
-		deleteMerchant,
-		getAllMerchant,
-		getMerchantByID,
-		updateMerchant
-	} from '@/api/accounts/merchants';
 	import { getAccountByNo, getMeAccount } from '@/api/payments/accounts';
 	import {
-	createNewTransactionP2B,
+		createNewTransactionP2B,
 		createNewTransactionP2P,
 		deleteTransaction,
 		getAllTransaction
 	} from '@/api/transactions/transaction';
 	import ActionButtonWrapper from '@/components/Action/ActionButtonWrapper.svelte';
-	import AddButton from '@/components/Button/AddButton.svelte';
 	import Button from '@/components/Button/Button.svelte';
-	import Add from '@/components/Icons/Add.svelte';
 	import CreditCard from '@/components/Icons/CreditCard.svelte';
-	import ComboboxInput from '@/components/Input/ComboboxInput.svelte';
 	import CustomInput from '@/components/Input/CustomInput.svelte';
-	import DropdownInput from '@/components/Input/DropdownInput.svelte';
 	import PaginationLimitDropdown from '@/components/Input/PaginationLimitDropdown.svelte';
 	import PasswordInput from '@/components/Input/PasswordInput.svelte';
 	import AdminPageLayout from '@/components/Layout/AdminPageLayout.svelte';
@@ -30,14 +19,12 @@
 	import Pagination from '@/components/Pagination/Pagination.svelte';
 	import Table from '@/components/Table/Table.svelte';
 	import { transactionSchema } from '@/constant/schema';
-	import type { CustomerData, TransactionData, UserData } from '@/interfaces/data.interface';
+	import type { TransactionData } from '@/interfaces/data.interface';
 	import { createAccountOptions } from '@/options/createAccountOptions';
-	import { UserAccountDataStore, getUserAccount } from '@/stores/account';
+	import { getUserAccount } from '@/stores/account';
 	import { createAddModal } from '@/stores/createAddModal';
 	import { createBulkDeleteHandler } from '@/stores/createBulkDeleteHandler';
-	import { createEditModal } from '@/stores/createEditModal';
 	import { createPaginatedQuery } from '@/stores/createPaginatedQuery';
-	import { createUserRoleOption } from '@/stores/options/createUserRoleOption';
 	import { useSvelteTable } from '@/stores/useSvelteTable';
 	import { formatNumber, translate } from '@/utils/utils';
 	import { renderComponent, type ColumnDef } from '@tanstack/svelte-table';
@@ -74,9 +61,9 @@
 		actionName: 'new peer transaction',
 		submitTransform: (value: z.infer<typeof transactionSchema>) => {
 			return {
-					...value,
-					account_no: getUserAccount().account_no,
-					account_id: getUserAccount().id,
+				...value,
+				account_no: getUserAccount().account_no,
+				account_id: getUserAccount().id
 			};
 		}
 	});
@@ -92,9 +79,9 @@
 		actionName: 'new transaction',
 		submitTransform: (value: z.infer<typeof transactionSchema>) => {
 			return {
-					...value,
-					account_no: getUserAccount().account_no,
-					account_id: getUserAccount().id,
+				...value,
+				account_no: getUserAccount().account_no,
+				account_id: getUserAccount().id
 			};
 		}
 	});
@@ -196,19 +183,20 @@
 			const accountMeta = await getMeAccount();
 
 			if (val.source_id == '') {
-				setFields('source_id', accountMeta.account_no);
+				setPeerField('source_id', accountMeta.account_no);
 			}
 
 			if (val.source_balance == '') {
-				setFields('source_balance', accountMeta.balance ?? 0);
+				setPeerField('source_balance', accountMeta.balance ?? 0);
 			}
 		}
 
 		if (val && val.recipient_no.length != 0 && val.recipient_no != val.prev_recipient_no) {
-			setFields('prev_recipient_no', val.recipient_no)
+			setPeerField('prev_recipient_no', val.recipient_no);
 
-			const recipientMeta = await getAccountByNo(val.recipient_no)
-			setFields('recipient_id', recipientMeta.id)
+			const recipientMeta = await getAccountByNo(val.recipient_no);
+			setPeerField('recipient_id', recipientMeta.id);
+			setPeerField('recipient_name', recipientMeta.owner_name);
 		}
 	});
 
@@ -226,10 +214,11 @@
 		}
 
 		if (val && val.recipient_no.length != 0 && val.recipient_no != val.prev_recipient_no) {
-			setFields('prev_recipient_no', val.recipient_no)
+			setFields('prev_recipient_no', val.recipient_no);
 
-			const recipientMeta = await getAccountByNo(val.recipient_no)
-			setFields('recipient_id', recipientMeta.id)
+			const recipientMeta = await getAccountByNo(val.recipient_no);
+			setFields('recipient_id', recipientMeta.id);
+			setFields('recipient_name', recipientMeta.owner_name);
 		}
 	});
 </script>
@@ -265,10 +254,11 @@
 <LoadingPulse isLoading={$query.isLoading || $accountQuery.isLoading} />
 
 <!-- Peer Trx Modal -->
-<!-- <FormModal open={$isPeerModalOpen} onCancel={closePeerModal} title="New Transaction" form={peerForm}>
+<FormModal open={$isPeerModalOpen} onCancel={closePeerModal} title="Pay a Friend" form={peerForm}>
 	<CustomInput name="source_id" label="Source Account" disabled />
 	<CustomInput name="source_balance" label="Source Balance" disabled />
 	<CustomInput name="recipient_no" label="Destination Account" />
+	<CustomInput name="recipient_name" label="Account Name" disabled />
 	<CustomInput name="nominal" label="Nominal" />
 	<PasswordInput name="pin" label="PIN" />
 	<CustomInput name="description" label="Description" />
@@ -276,13 +266,14 @@
 	<div class="flex justify-end w-full">
 		<Button>Save</Button>
 	</div>
-</FormModal> -->
+</FormModal>
 
 <!-- Merchatn Trx Modal -->
-<FormModal open={$isAddModalOpen} onCancel={closeAddModal} title="New Transaction" form={addForm}>
+<FormModal open={$isAddModalOpen} onCancel={closeAddModal} title="Pay Merchant" form={addForm}>
 	<CustomInput name="source_id" label="Source Account" disabled />
 	<CustomInput name="source_balance" label="Source Balance" disabled />
 	<CustomInput name="recipient_no" label="Destination Account" />
+	<CustomInput name="recipient_name" label="Account Name" disabled />
 	<CustomInput name="nominal" label="Nominal" />
 	<PasswordInput name="pin" label="PIN" />
 	<CustomInput name="description" label="Description" />

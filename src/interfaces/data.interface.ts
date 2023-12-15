@@ -60,11 +60,23 @@ type BeneficiaryData = {
 	status: number,
 }
 
+type SettlementData = {
+	id: number, 
+	transaction_id: string,
+	merchant_id: string,
+	merchant_name: string,
+	beneficiary_id?: string,
+	amount: number,
+	status: number,
+	settlement_date?: string,
+}
+
 export type {
     UserData,
 	CustomerData,
 	MerchantData,
 	AccountData,
 	TransactionData,
-	BeneficiaryData
+	BeneficiaryData,
+	SettlementData
 }

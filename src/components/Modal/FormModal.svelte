@@ -11,7 +11,7 @@
 {#if open}
   <DarkBackground onClose={onCancel}>
     <div
-      class="flex flex-col bg-white px-10 py-9 rounded-md relative min-w-[800px] max-h-[80vh]"
+      class="flex flex-col bg-white px-10 py-9 rounded-md relative min-w-[800px]"
     >
       <div class="w-full flex flex-col gap-1 text-start">
         <button class="flex gap-2" on:click={onCancel}>
