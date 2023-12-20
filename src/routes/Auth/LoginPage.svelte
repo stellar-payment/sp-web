@@ -24,7 +24,7 @@
 		successFn: (data: UserAuthData) => {
 			updateAuthUser(data);
 		},
-		callbackRoute: '/dashboard'
+		callbackRoute: "/dashboard"
 	});
 
 	UserAuthDataStore.subscribe((value) => {

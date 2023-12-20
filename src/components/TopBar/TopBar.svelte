@@ -15,6 +15,16 @@
 	let isOpenProfile = false;
 	const client = useQueryClient();
 
+	window.addEventListener("click", (event) => {
+		if (
+			event.target?.id != "profile-modal" &&
+			event.target?.id != "profile-button"
+		) {
+			isOpen = false
+			isOpenProfile = false
+		}
+	})
+
 	const onClickProfile = () => {
 		isOpenProfile = true;
 		isOpen = false;

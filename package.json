@@ -41,6 +41,7 @@
 		"@tanstack/svelte-table": "^8.10.7",
 		"@tauri-apps/api": "^1.5.1",
 		"@tsconfig/svelte": "^5.0.2",
+		"apexcharts": "^3.45.0",
 		"axios": "^1.6.2",
 		"dayjs": "^1.11.10",
 		"felte": "^1.2.12",

@@ -2,7 +2,10 @@ import AccountData from "@/routes/Accounts/AccountData.svelte";
 import LoginPage from "@/routes/Auth/LoginPage.svelte";
 import RegisterCustomer from "@/routes/Auth/RegisterCustomer.svelte";
 import RegisterMerchant from "@/routes/Auth/RegisterMerchant.svelte";
+import Dashboard from "@/routes/Dashboard/Dashboard.svelte";
 import DashboardAdmin from "@/routes/Dashboard/DashboardAdmin.svelte";
+import DashboardCustomer from "@/routes/Dashboard/DashboardCustomer.svelte";
+import DashboardMerchant from "@/routes/Dashboard/DashboardMerchant.svelte";
 import NotFound from "@/routes/Error/NotFound.svelte";
 import AccountFirstSetup from "@/routes/Initialization/AccountFirstSetup.svelte";
 import ClientRegistration from "@/routes/Initialization/ClientRegistration.svelte";
@@ -25,7 +28,10 @@ const routes = {
   "/login": LoginPage,
   "/register-merchant": RegisterMerchant,
   "/register-customer": RegisterCustomer,
+  "/dashboard": Dashboard,
   "/dashboard-admin": DashboardAdmin,
+  "/dashboard-merchant": DashboardMerchant,
+  "/dashboard-customer": DashboardCustomer,
   "/users": UserData,
   "/customers": Customers,
   "/merchants": Merchants,

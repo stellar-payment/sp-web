@@ -23,7 +23,7 @@ const SIDEBAR = [
 		key: 'Dashboard',
 		route: '/dashboard-merchant',
 		icon: Dashboard,
-		roleAccess: [0, 2],
+		roleAccess: [0, 3],
 		label: 'Dashboard',
 		isClickable: true,
 		subMenu: []
@@ -32,7 +32,7 @@ const SIDEBAR = [
 		key: 'Dashboard',
 		route: '/dashboard-customer',
 		icon: Dashboard,
-		roleAccess: [0, 3],
+		roleAccess: [0, 2],
 		label: 'Dashboard',
 		isClickable: true,
 		subMenu: []

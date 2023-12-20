@@ -194,9 +194,13 @@
 		if (val && val.recipient_no.length != 0 && val.recipient_no != val.prev_recipient_no) {
 			setPeerField('prev_recipient_no', val.recipient_no);
 
-			const recipientMeta = await getAccountByNo(val.recipient_no);
-			setPeerField('recipient_id', recipientMeta.id);
-			setPeerField('recipient_name', recipientMeta.owner_name);
+			try {
+				const recipientMeta = await getAccountByNo(val.recipient_no);
+				setPeerField('recipient_id', recipientMeta.id);
+				setPeerField('recipient_name', recipientMeta.owner_name);
+			} catch (e) {
+				setPeerField('recipient_name', "invalid account");
+			}
 		}
 	});
 
@@ -216,9 +220,13 @@
 		if (val && val.recipient_no.length != 0 && val.recipient_no != val.prev_recipient_no) {
 			setFields('prev_recipient_no', val.recipient_no);
 
-			const recipientMeta = await getAccountByNo(val.recipient_no);
-			setFields('recipient_id', recipientMeta.id);
-			setFields('recipient_name', recipientMeta.owner_name);
+			try {
+				const recipientMeta = await getAccountByNo(val.recipient_no);
+				setFields('recipient_id', recipientMeta.id);
+				setFields('recipient_name', recipientMeta.owner_name);
+			} catch (e) {
+				setFields('recipient_name', "invalid account");
+			}
 		}
 	});
 </script>

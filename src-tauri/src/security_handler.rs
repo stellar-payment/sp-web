@@ -427,5 +427,10 @@ async fn get_master_keypair_list() -> Result<ListMasterPKResponse, BackendError>
       )));
    }
 
-   Ok(data.data.unwrap())
+   let master_keys = data.data.unwrap();
+   if master_keys.keys.is_empty() {
+      return Err(BackendError::GenericError("master key not defined".to_string()));
+   }
+
+   Ok(master_keys)
 }
