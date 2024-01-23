@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getAdminDashboard, getMerchantDashboard } from '@/api/dashboard/api';
+	import { getMerchantDashboard } from '@/api/dashboard/api';
 	import DashboardCard from '@/components/Card/DashboardCard.svelte';
 	import DashboardTrxCard from '@/components/Card/DashboardTrxCard.svelte';
 	import IDCard from '@/components/Card/IDCard.svelte';

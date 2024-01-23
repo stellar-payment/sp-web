@@ -238,7 +238,6 @@
 			<Button onClick={openPeerModal} icon={CreditCard}>Pay Friend</Button>
 			<Button onClick={openAddModal} icon={CreditCard}>Pay Merchant</Button>
 		</div>
-		<!-- <AddButton onClick={openAddModal} /> -->
 	</div>
 	{#if $query.data}
 		<Table table={table.table} />

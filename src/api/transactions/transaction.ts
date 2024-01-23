@@ -45,17 +45,15 @@ const getTransactionByID = async (id: number) => {
 		`/payment/api/v1/transactions/${id}`
 	);
 	return data.data;
-};
+	};
 
 const createNewTransactionP2P = async (trx: z.infer<typeof transactionSchema>) => {
 	try {
-		// authenticateAccount(trx.account_no, trx.pin).then((v) => console.log("aa", v));
-
 		const encrypted_payload: EncryptedData = await invoke('encrypt_payload', {
 			payload: JSON.stringify(trx)
 		});
 
-		const encrypted_data: AxiosResponse<SecuredAPIResponse> = await secureAuthClient.post(
+ 		await secureAuthClient.post(
 			`/payment/api/v1/transactions/p2p`,
 			`${encrypted_payload.data}.${encrypted_payload.tag}`,
 			{
@@ -78,6 +76,7 @@ const createNewTransactionP2P = async (trx: z.infer<typeof transactionSchema>) =
 		});
 
 		const errmeta = JSON.parse(decrypted)
+		console.log('err', errmeta)
 
 		return Promise.reject(Error(errmeta.error.msg as string));
 	}
@@ -85,13 +84,11 @@ const createNewTransactionP2P = async (trx: z.infer<typeof transactionSchema>) =
 
 const createNewTransactionP2B = async (trx: z.infer<typeof transactionSchema>) => {
 	try {
-		// authenticateAccount(trx.account_no, trx.pin).then((v) => console.log("aa", v));
-
 		const encrypted_payload: EncryptedData = await invoke('encrypt_payload', {
 			payload: JSON.stringify(trx)
 		});
 
-		const encrypted_data: AxiosResponse<SecuredAPIResponse> = await secureAuthClient.post(
+		await secureAuthClient.post(
 			`/payment/api/v1/transactions/p2b`,
 			`${encrypted_payload.data}.${encrypted_payload.tag}`,
 			{
@@ -105,23 +102,27 @@ const createNewTransactionP2B = async (trx: z.infer<typeof transactionSchema>) =
 		return
 	} catch (e) {
 		const data = (e as AxiosError).response?.data as SecuredAPIResponse
-		const decrypted: string = await invoke('decrypt_payload', {
-			payload: {
-				data: data.data,
-				keypair_hash: data.secret_key,
-				tag: data.tag
-			}
-		});
-
-		const errmeta = JSON.parse(decrypted)
-
-		return Promise.reject(Error(errmeta.error.msg as string));
+		
+		let errmeta: any = e;
+		if (data != undefined) {
+			const decrypted: string = await invoke('decrypt_payload', {
+				payload: {
+					data: data.data,
+					keypair_hash: data.secret_key,
+					tag: data.tag
+				}
+			});
+	
+			errmeta = JSON.parse(decrypted)
+			console.log('err', errmeta)
+			errmeta = errmeta.error.msg as string
+		}
+		console.log('err', e)
+		console.log('err', errmeta)
+		
+		return Promise.reject(Error(errmeta));
 	}
 };
-
-// const updateTransaction = async (editTransactionData: z.infer<typeof updateTransactionSchema>, id: string) => {
-// 	await authClient.put(`/payment/api/v1/accounts/${id}`, editTransactionData);
-// };
 
 const deleteTransaction = async (id: number) => {
 	await authClient.delete(`/payment/api/v1/transactions/${id}`);
@@ -132,6 +133,5 @@ export {
 	getTransactionByID,
 	createNewTransactionP2P,
 	createNewTransactionP2B,
-	// updateTransaction,
 	deleteTransaction
 };
